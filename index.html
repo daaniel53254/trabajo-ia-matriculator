@@ -4,143 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matriculator - Propuesta de IA y Lenguajes</title>
-    <!-- Enlace al archivo de estilos CSS -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Librería Chart.js para el gráfico interactivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
 
-    <header>
-        <h1>🚗 Matriculator</h1>
-        <p>Sistema de Reconocimiento de Matrículas | Propuesta Técnica de Inteligencia Artificial</p>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background-attachment: fixed;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+        }
+
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 4px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .scale-in {
+            animation: scaleIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-gradient {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .pulse-slow {
+            animation: pulseSlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulseSlow {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .reveal {
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal.active {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+
+    <!-- HEADER / HERO SECTION -->
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        </div>
+
+        <div class="relative z-10 text-center max-w-4xl px-6">
+            <h1 class="text-7xl font-bold mb-6 fade-in">
+                <span class="gradient-text">Matriculator</span>
+            </h1>
+            <p class="text-2xl text-slate-300 mb-8 fade-in" style="animation-delay: 0.2s;">
+                Sistema de Reconocimiento de Matrículas
+            </p>
+            <p class="text-xl text-slate-400 fade-in" style="animation-delay: 0.4s;">
+                Propuesta Técnica de Inteligencia Artificial
+            </p>
+            
+            <div class="mt-12 fade-in" style="animation-delay: 0.6s;">
+                <button onclick="scrollToSection('intro')" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
+                    Explorar Propuesta
+                </button>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
     </header>
 
-    <div class="container">
-        
-        <!-- SECCIÓN 1 -->
-        <div class="card">
-            <h2>1. Introducción y Caso de Uso (Paso 1)</h2>
-            <p><strong>Matriculator</strong> es una aplicación orientada a automatizar el acceso a aparcamientos mediante la detección de matrículas en imágenes de cámaras de seguridad. Su diseño prioriza la agilidad en el flujo vehicular y el cumplimiento estricto de la privacidad.</p>
-        </div>
-
-        <!-- SECCIÓN 2 -->
-        <div class="card">
-            <h2>2. Comparativa de Lenguajes y Decisiones (Paso 2)</h2>
-            
-            <h3>📊 Análisis de Interés Global (Google Trends)</h3>
-            <p>A partir de los ficheros exportados y alojados en la carpeta <code>data/</code>, se constata que <strong>Python</strong> encabeza de forma absoluta el interés mundial en búsquedas web y YouTube destinadas a la Inteligencia Artificial.</p>
-            
-            <!-- Contenedor del Gráfico Dinámico -->
-            <div class="chart-container">
-                <canvas id="trendsChart"></canvas>
+    <!-- SECCIÓN 1: INTRODUCCIÓN -->
+    <section id="intro" class="min-h-screen py-20 px-6 flex items-center">
+        <div class="max-w-6xl mx-auto w-full">
+            <div class="card-gradient rounded-2xl p-12 glow-effect reveal">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="slide-in-left">
+                        <h2 class="text-5xl font-bold mb-6">
+                            <span class="gradient-text">1. Introducción</span>
+                            <br/>y Caso de Uso
+                        </h2>
+                        <p class="text-lg text-slate-300 leading-relaxed mb-6">
+                            <strong>Matriculator</strong> es una aplicación orientada a automatizar el acceso a aparcamientos mediante la detección de matrículas en imágenes de cámaras de seguridad.
+                        </p>
+                        <p class="text-lg text-slate-400 leading-relaxed">
+                            Su diseño prioriza la agilidad en el flujo vehicular y el cumplimiento estricto de la privacidad, integrando tecnologías de visión artificial y OCR de última generación.
+                        </p>
+                    </div>
+                    <div class="slide-in-right">
+                        <div class="bg-gradient-to-br from-blue-900 to-cyan-900 rounded-xl p-8 hover-glow">
+                            <h3 class="text-2xl font-bold mb-6 text-blue-300">Flujo del Sistema</h3>
+                            <ul class="space-y-4 text-slate-300">
+                                <li class="flex items-start">
+                                    <span class="inline-block w-8 h-8 bg-blue-600 rounded-full text-center font-bold mr-4 flex-shrink-0">1</span>
+                                    <span>Usuario sube imagen del vehículo</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="inline-block w-8 h-8 bg-blue-600 rounded-full text-center font-bold mr-4 flex-shrink-0">2</span>
+                                    <span>Sistema valida formato y tamaño</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="inline-block w-8 h-8 bg-blue-600 rounded-full text-center font-bold mr-4 flex-shrink-0">3</span>
+                                    <span>IA detecta y extrae matrícula</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="inline-block w-8 h-8 bg-blue-600 rounded-full text-center font-bold mr-4 flex-shrink-0">4</span>
+                                    <span>Evaluación de confianza</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="inline-block w-8 h-8 bg-blue-600 rounded-full text-center font-bold mr-4 flex-shrink-0">5</span>
+                                    <span>Resultado automático o revisión humana</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <h3>⚙️ Características Fundamentales</h3>
-            <ul>
-                <li><strong>Facilidad de aprendizaje y legibilidad:</strong> <span class="badge">Python</span> sobresale por su sintaxis intuitiva y limpia, facilitando un desarrollo rápido y mantenible.</li>
-                <li><strong>Análisis estadístico:</strong> <span class="badge">R</span> se posiciona como el estándar absoluto para el cálculo estadístico avanzado, aunque con menor versatilidad para despliegues de IA en producción.</li>
-                <li><strong>Integración web y mantenimiento:</strong> Python y JavaScript ofrecen una compatibilidad excelente con APIs, bases de datos y entornos web.</li>
-            </ul>
-
-            <h3>📚 Tabla de Bibliotecas para IA y Datos</h3>
-            <table>
-                <tr>
-                    <th>Lenguaje</th>
-                    <th>Bibliotecas Clave (IA y Datos)</th>
-                    <th>Enfoque Principal</th>
-                </tr>
-                <tr>
-                    <td><strong>Python</strong></td>
-                    <td>OpenCV, EasyOCR, TensorFlow, PyTorch, Pandas</td>
-                    <td>Visión artificial, Deep Learning y Ciencia de Datos</td>
-                </tr>
-                <tr>
-                    <td><strong>R</strong></td>
-                    <td>caret, randomForest, ggplot2</td>
-                    <td>Estadística y modelado analítico</td>
-                </tr>
-                <tr>
-                    <td><strong>JavaScript</strong></td>
-                    <td>TensorFlow.js</td>
-                    <td>IA ejecutada en navegadores / Interfaces web</td>
-                </tr>
-                <tr>
-                    <td><strong>C++</strong></td>
-                    <td>OpenCV (nativo), Dlib</td>
-                    <td>Procesamiento de vídeo de ultra bajo nivel</td>
-                </tr>
-                <tr>
-                    <td><strong>Java / PHP</strong></td>
-                    <td>Weka (Java) / Sin librerías nativas de peso (PHP)</td>
-                    <td>Aplicaciones corporativas y web tradicional</td>
-                </tr>
-            </table>
-
-            <h3>⚖️ Matriz de Decisión</h3>
-            <table>
-                <tr>
-                    <th>Criterio</th>
-                    <th>Python</th>
-                    <th>JavaScript</th>
-                    <th>C++</th>
-                    <th>Java</th>
-                    <th>PHP</th>
-                    <th>R</th>
-                </tr>
-                <tr>
-                    <td><strong>Facilidad / Aprendizaje</strong></td>
-                    <td>Alto</td>
-                    <td>Alto</td>
-                    <td>Bajo</td>
-                    <td>Medio</td>
-                    <td>Medio</td>
-                    <td>Medio</td>
-                </tr>
-                <tr>
-                    <td><strong>Análisis Estadístico</strong></td>
-                    <td>Alto</td>
-                    <td>Bajo</td>
-                    <td>Bajo</td>
-                    <td>Bajo</td>
-                    <td>Bajo</td>
-                    <td><strong>Excelente</strong></td>
-                </tr>
-                <tr>
-                    <td><strong>Ecosistema de IA</strong></td>
-                    <td><strong>Excelente</strong></td>
-                    <td>Medio</td>
-                    <td>Alto</td>
-                    <td>Bajo</td>
-                    <td>Nulo</td>
-                    <td>Medio</td>
-                </tr>
-                <tr>
-                    <td><strong>Despliegue y Web</strong></td>
-                    <td>Alto</td>
-                    <td>Excelente</td>
-                    <td>Medio</td>
-                    <td>Alto</td>
-                    <td>Alto</td>
-                    <td>Bajo</td>
-                </tr>
-            </table>
-
-            <h3>🎯 Cierre y Decisiones Tomadas</h3>
-            <ul>
-                <li><strong>¿Son distintos el lenguaje de la aplicación y el de la IA?</strong> No, en este diseño <strong>emplearemos Python para ambas capas</strong>, unificando el código y evitando la complejidad de comunicar backends heterogéneos.</li>
-                <li><strong>Lenguaje principal elegido:</strong> <span class="badge">Python</span> para la gestión global y la capa de visión artificial / OCR.</li>
-                <li><strong>¿Por qué se descartan los demás?</strong> 
-                    <ul>
-                        <li><em>C++:</em> Descartado por su elevada complejidad y el tiempo excesivo de desarrollo que implicaría.</li>
-                        <li><em>R:</em> Descartado porque carece de la versatilidad de Python para integrar modelos de visión en una aplicación web en producción.</li>
-                        <li><em>Java y PHP:</em> Descartados por la falta de un ecosistema nativo sólido en librerías de IA y reconocimiento de matrículas.</li>
-                        <li><em>JavaScript:</em> Queda rezagado frente a Python en la disponibilidad de modelos de Deep Learning preentrenados.</li>
-                    </ul>
-                </li>
-            </ul>
         </div>
+    </section>
 
+<<<<<<< Updated upstream
         <!-- SECCIÓN 4 (Ya integrada dentro de la tarjeta y el container) -->
         <div class="card">
             <h2>4. Lenguajes de marcado y formatos de datos</h2>
@@ -180,8 +282,328 @@
         </div>
 
     </div> <!-- Fin del container -->
+=======
+    <!-- SECCIÓN 2: COMPARATIVA DE LENGUAJES -->
+    <section id="lenguajes" class="min-h-screen py-20 px-6 flex items-center">
+        <div class="max-w-6xl mx-auto w-full">
+            <div class="card-gradient rounded-2xl p-12 glow-effect reveal">
+                <h2 class="text-5xl font-bold mb-12 text-center">
+                    <span class="gradient-text">2. Comparativa de Lenguajes</span>
+                    <br/>y Decisiones
+                </h2>
 
-    <!-- Enlace al archivo de lógica JavaScript -->
-    <script src="script.js"></script>
+                <!-- Google Trends Chart -->
+                <div class="mb-16 scale-in">
+                    <h3 class="text-3xl font-bold mb-6 text-blue-300">📊 Análisis de Interés Global (Google Trends)</h3>
+                    <div class="bg-slate-900 rounded-xl p-8 border border-slate-700">
+                        <canvas id="trendsChart" height="80"></canvas>
+                    </div>
+                    <p class="text-slate-400 mt-4 text-center">
+                        Python encabeza de forma absoluta el interés mundial en búsquedas destinadas a Inteligencia Artificial
+                    </p>
+                </div>
+
+                <!-- Características Fundamentales -->
+                <div class="mb-16">
+                    <h3 class="text-3xl font-bold mb-8 text-blue-300">⚙️ Características Fundamentales</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-all">
+                            <h4 class="text-xl font-bold mb-4 text-cyan-300">Python</h4>
+                            <p class="text-slate-300">Sobresale por su sintaxis intuitiva y limpia, facilitando desarrollo rápido y mantenible.</p>
+                            <ul class="mt-4 space-y-2 text-sm text-slate-400">
+                                <li>✓ Fácil aprendizaje</li>
+                                <li>✓ Ecosistema IA superior</li>
+                                <li>✓ Despliegue web</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-all">
+                            <h4 class="text-xl font-bold mb-4 text-cyan-300">R</h4>
+                            <p class="text-slate-300">Estándar absoluto para cálculo estadístico avanzado, pero menor versatilidad en producción.</p>
+                            <ul class="mt-4 space-y-2 text-sm text-slate-400">
+                                <li>✓ Análisis estadístico</li>
+                                <li>✗ Débil en IA</li>
+                                <li>✗ Despliegue complejo</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-all">
+                            <h4 class="text-xl font-bold mb-4 text-cyan-300">Otros</h4>
+                            <p class="text-slate-300">JavaScript, C++, Java y PHP quedan rezagados en ecosistema de IA y visión artificial.</p>
+                            <ul class="mt-4 space-y-2 text-sm text-slate-400">
+                                <li>✗ Poco soporte IA</li>
+                                <li>✗ Complejidad alta</li>
+                                <li>✗ Menos librerías</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Bibliotecas -->
+                <div class="mb-16">
+                    <h3 class="text-3xl font-bold mb-6 text-blue-300">📚 Tabla de Bibliotecas para IA y Datos</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-blue-500">
+                                    <th class="px-4 py-3 text-left text-blue-300 font-bold">Lenguaje</th>
+                                    <th class="px-4 py-3 text-left text-blue-300 font-bold">Bibliotecas Clave</th>
+                                    <th class="px-4 py-3 text-left text-blue-300 font-bold">Enfoque Principal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-700 hover:bg-slate-800 transition-all">
+                                    <td class="px-4 py-3"><span class="font-bold text-cyan-300">Python</span></td>
+                                    <td class="px-4 py-3 text-slate-300">OpenCV, EasyOCR, TensorFlow, PyTorch, Pandas</td>
+                                    <td class="px-4 py-3 text-slate-400">Visión artificial, Deep Learning y Ciencia de Datos</td>
+                                </tr>
+                                <tr class="border-b border-slate-700 hover:bg-slate-800 transition-all">
+                                    <td class="px-4 py-3"><span class="font-bold text-cyan-300">R</span></td>
+                                    <td class="px-4 py-3 text-slate-300">caret, randomForest, ggplot2</td>
+                                    <td class="px-4 py-3 text-slate-400">Estadística y modelado analítico</td>
+                                </tr>
+                                <tr class="border-b border-slate-700 hover:bg-slate-800 transition-all">
+                                    <td class="px-4 py-3"><span class="font-bold text-cyan-300">JavaScript</span></td>
+                                    <td class="px-4 py-3 text-slate-300">TensorFlow.js</td>
+                                    <td class="px-4 py-3 text-slate-400">IA en navegadores / Interfaces web</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Matriz de Decisión -->
+                <div class="mb-16">
+                    <h3 class="text-3xl font-bold mb-6 text-blue-300">⚖️ Matriz de Decisión</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-green-900 bg-opacity-30 border border-green-500 rounded-lg p-4">
+                            <p class="text-green-300 font-bold">Python</p>
+                            <p class="text-slate-300 text-sm mt-2">Facilidad: Alto | Estadística: Alto | IA: Excelente | Web: Alto</p>
+                        </div>
+                        <div class="bg-yellow-900 bg-opacity-30 border border-yellow-500 rounded-lg p-4">
+                            <p class="text-yellow-300 font-bold">R</p>
+                            <p class="text-slate-300 text-sm mt-2">Facilidad: Medio | Estadística: Excelente | IA: Medio | Web: Bajo</p>
+                        </div>
+                        <div class="bg-red-900 bg-opacity-30 border border-red-500 rounded-lg p-4">
+                            <p class="text-red-300 font-bold">Otros</p>
+                            <p class="text-slate-300 text-sm mt-2">Rezagados en IA | Complejidad variable | Soporte limitado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decisión Final -->
+                <div class="bg-gradient-to-r from-blue-900 to-cyan-900 rounded-xl p-8 border-l-4 border-blue-500">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-300">🎯 Decisión Final</h3>
+                    <div class="space-y-4 text-slate-300">
+                        <p>
+                            <span class="font-bold text-cyan-300">Lenguaje elegido: Python</span> para la gestión global y la capa de visión artificial / OCR
+                        </p>
+                        <p>
+                            <span class="font-bold text-cyan-300">¿Son distintos?</span> No. Usamos Python para ambas capas, unificando el código y evitando complejidad.
+                        </p>
+                        <p>
+                            <span class="font-bold text-cyan-300">¿Por qué se descartan los demás?</span>
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-400">
+                            <li>C++: Complejidad excesiva y tiempo de desarrollo prohibitivo</li>
+                            <li>R: Falta versatilidad para integrar modelos en web producción</li>
+                            <li>Java/PHP: Ecosistema débil en librerías de IA nativas</li>
+                            <li>JavaScript: Rezagado en disponibilidad de modelos Deep Learning preentrenados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 3: ARQUITECTURA -->
+    <section id="arquitectura" class="min-h-screen py-20 px-6 flex items-center">
+        <div class="max-w-6xl mx-auto w-full">
+            <div class="card-gradient rounded-2xl p-12 glow-effect reveal">
+                <h2 class="text-5xl font-bold mb-12 text-center">
+                    <span class="gradient-text">3. Arquitectura Técnica</span>
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="scale-in">
+                        <h3 class="text-2xl font-bold mb-6 text-cyan-300">Frontend (HTML)</h3>
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700 space-y-3">
+                            <p class="text-slate-300">
+                                <span class="text-blue-400 font-bold">Interfaz web:</span> Formulario para subida de imagen
+                            </p>
+                            <p class="text-slate-300">
+                                <span class="text-blue-400 font-bold">Tecnología:</span> HTML5 con Tailwind CSS
+                            </p>
+                            <p class="text-slate-300">
+                                <span class="text-blue-400 font-bold">Interactividad:</span> JavaScript vanilla
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="scale-in" style="animation-delay: 0.2s;">
+                        <h3 class="text-2xl font-bold mb-6 text-cyan-300">Backend (Python)</h3>
+                        <div class="bg-slate-900 rounded-lg p-6 border border-slate-700 space-y-3">
+                            <p class="text-slate-300">
+                                <span class="text-blue-400 font-bold">Detección:</span> YOLOv8 (objetos)
+                            </p>
+                            <p class="text-slate-300">
+                                <span class="text-blue-400 font-bold">OCR:</span> PaddleOCR (lectura caracteres)
+                            </p>
+                            <p class="text-slate-300">
+                                <span class="text-blue-400 font-bold">Lógica:</span> Validación, preprocesamiento, inferencia
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <h3 class="text-2xl font-bold mb-6 text-cyan-300">Flujo de Datos</h3>
+                    <div class="relative">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex-1 text-center">
+                                <div class="bg-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 font-bold">1</div>
+                                <p class="text-slate-300">Imagen</p>
+                            </div>
+                            <div class="flex-1 text-center">
+                                <div class="bg-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 font-bold">2</div>
+                                <p class="text-slate-300">Validación</p>
+                            </div>
+                            <div class="flex-1 text-center">
+                                <div class="bg-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 font-bold">3</div>
+                                <p class="text-slate-300">Procesamiento</p>
+                            </div>
+                            <div class="flex-1 text-center">
+                                <div class="bg-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 font-bold">4</div>
+                                <p class="text-slate-300">IA</p>
+                            </div>
+                            <div class="flex-1 text-center">
+                                <div class="bg-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 font-bold">5</div>
+                                <p class="text-slate-300">Resultado</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 px-6 border-t border-slate-700 text-center text-slate-400">
+        <p>Propuesta Técnica de Matriculator | Especialidad IA & Big Data | CEBANC 2026</p>
+        <p class="mt-2 text-sm">Documentación disponible en el repositorio del proyecto</p>
+    </footer>
+
+    <script>
+        // Intersection Observer para revelar elementos
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        revealElements.forEach(el => observer.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('button[onclick*="scrollToSection"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const sectionId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                const section = document.getElementById(sectionId);
+                section.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Google Trends Chart
+        const ctx = document.getElementById('trendsChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+                    datasets: [
+                        {
+                            label: 'Python',
+                            data: [65, 72, 78, 85, 89, 92, 95],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3
+                        },
+                        {
+                            label: 'JavaScript',
+                            data: [45, 48, 50, 52, 54, 56, 58],
+                            borderColor: '#06b6d4',
+                            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'R',
+                            data: [30, 32, 35, 37, 39, 40, 41],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Java',
+                            data: [25, 26, 27, 28, 28, 29, 30],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#cbd5e1',
+                                font: {
+                                    size: 12,
+                                    weight: '600'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#cbd5e1'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#cbd5e1'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+>>>>>>> Stashed changes
+
 </body>
 </html>
