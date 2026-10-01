@@ -89,6 +89,6 @@ function activarIndice() {
   secciones.forEach(s => observador.observe(s));
 }
 
-dibujar("data/trends_web.csv", "grafico-web", "estado-web").then(rellenarUltimo);
+dibujar("data/trendsbusquedaweb.csv", "grafico-web", "estado-web").then(rellenarUltimo);
 dibujar("data/trends_youtube.csv", "grafico-youtube", "estado-youtube");
 activarIndice();
