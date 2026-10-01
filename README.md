@@ -42,7 +42,7 @@ En YouTube Search también aparece Python como el lenguaje con mayor interés en
 Así que Python es muy importante en las búsquedas relacionados con estos lenguajes, pero el interés de búsqueda no significa que sea el mejor para desarrollar IA. Para tomar esta decisión también veremos otros aspectos, como librerías de IA, fácil de aprender, el trabajo con datos, etc.
 
 ## 2. Enlaces de Interés
-* **URL de Netlify (Web estática):** (https://trabajo-ia-matriculator.netlify.app/#aplicacion)
+* **URL de Netlify (Web estática):** https://trabajo-ia-matriculator.netlify.app
 * **Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator)
 
 ## 3. Preguntas Adicionales (Paso 5)
