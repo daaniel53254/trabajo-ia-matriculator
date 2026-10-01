@@ -277,7 +277,7 @@ Google Trends (Datos de interés global de lenguajes de programación).
 
 ---
 
-# 8. Enlaces de Interés
+# 7. Enlaces de Interés
 
 **URL de Netlify (Web estática):** FALTA PUBLICAR
 
