@@ -295,6 +295,7 @@ Google Trends (Datos de interés global de lenguajes de programación).
 # 8. Anexo de uso de Inteligencia Artificial
 
 Durante la realización del trabajo hemos utilizado principalmente **ChatGPT Pro y Gemini** como apoyo. Las hemos utilizado para resolver dudas, entender conceptos, comparar lenguajes de programación y revisar algunas partes del trabajo.
+
 Cuando alguna explicación era demasiado técnica o no la entendíamos bien, hacíamos repreguntas para que se explicara de una forma más sencilla. También comparábamos algunas respuestas y revisábamos la información antes de incluirla en el trabajo.
 La IA nos ha servido como apoyo, pero las decisiones finales sobre Matriculator, los lenguajes elegidos y la organización del trabajo las hemos tomado nosotros.
 
@@ -358,11 +359,11 @@ Diferenciamos entre las herramientas que hemos utilizado en el trabajo y las que
 
 ## 8.6 Reflexión sobre el uso de IA
 
-La IA nos ayudó principalmente a entender conceptos que al principio resultaban complicados, comparar diferentes opciones y revisar algunas partes del trabajo.
+La IA nos ayudó mucho a entender conceptos que al principio eran complicados, comparar diferentes opciones y revisar algunas partes del trabajo.
 
 Nos ayudó a detectar errores o confusiones, pero no utilizamos todas sus respuestas directamente. Cuando una respuesta no encajaba con el proyecto, la cambiábamos o la descartábamos.
-Una decisión importante tomada por el grupo fue utilizar **Python** para la Inteligencia Artificial y **JavaScript** para la aplicación e interfaz web, después de comparar las diferentes opciones.
-La IA fue una herramienta de apoyo durante el trabajo, pero la elección de Matriculator, los lenguajes, la tabla de decisión y las decisiones finales fueron realizadas por el grupo.
+Una decisión importante tomada por el grupo fue utilizar **Python** para la Inteligencia Artificial y **JavaScript** para la aplicación, después de comparar las diferentes opciones.
+La IA ayudó durante el trabajo, pero la elección de Matriculator, los lenguajes, la tabla de decisión y las decisiones finales fueron realizadas por el grupo.
 
 
 ---
