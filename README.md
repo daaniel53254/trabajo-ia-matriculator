@@ -284,3 +284,9 @@ Google Trends (Datos de interés global de lenguajes de programación).
 **Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator)
 
 ---
+
+# 8. Anexos
+
+
+
+---
