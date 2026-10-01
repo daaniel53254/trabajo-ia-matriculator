@@ -1,4 +1,4 @@
-# Trabajo-ia-matriculator
+# Trabajo-IA-matriculator
 # Trabajo Grupal RA1: Matriculator
 
 ## 1. Organización del Grupo y Temporalización
