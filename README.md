@@ -190,7 +190,11 @@ Todos los lenguajes son muy buenos y cada uno tiene su propia función, pero se 
 
 # 3. Flujo y pseudocódigo
 
-**Pendiente de completar.**
+En este apartado se explica como funciona el Matriculator desde que el usuario introduce una imagen hasta que se obtiene el resultado.
+
+El flujo y el pseudocódigo completo se encuentran en:
+
+- `pseudocodigo.ipynb`
 
 ---
 
