@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pseudocodigo - Matriculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cb: { 950: "#081f4a", 900: "#0b2a5b", 800: "#123a7a", 700: "#1b4b98", 600: "#2563c9" }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <style type="text/tailwindcss">
+    @layer base {
+      body { font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+      h2 { @apply text-2xl md:text-3xl font-bold text-white tracking-tight pl-4 mb-3 relative; }
+      h2::before { content: ""; @apply absolute left-0 top-1 bottom-1 w-1.5 rounded-full bg-gradient-to-b from-sky-300 to-cb-600; }
+      p  { @apply leading-relaxed mb-3; }
+      a  { @apply text-sky-300 underline underline-offset-4 decoration-sky-300/40 transition-colors hover:text-sky-200 hover:decoration-sky-200; }
+      code { @apply bg-cb-950 text-sky-200 px-1.5 py-0.5 rounded-md text-sm border border-cb-700; }
+      section { @apply mb-16; }
+    }
+    @layer components {
+      .bloque { @apply relative rounded-xl border border-cb-700 bg-cb-950 shadow-lg shadow-cb-950/40 my-4 overflow-hidden; }
+      .bloque pre { @apply m-0 overflow-x-auto; }
+      .bloque pre code { @apply bg-transparent border-0 p-5 text-sm leading-relaxed block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: transparent; }
+      .copiar { @apply absolute top-2 right-2 rounded-md border border-cb-700 bg-cb-800 px-2.5 py-1 text-xs text-blue-100 transition-colors hover:bg-cb-700 hover:text-white; }
+    }
+    html { scrollbar-color: #1b4b98 #081f4a; }
+  </style>
+</head>
+<body class="bg-cb-900 text-blue-100 antialiased">
+
+<header class="border-b border-cb-700 bg-gradient-to-br from-cb-600/50 via-cb-800/40 to-cb-900 relative overflow-hidden">
+  <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl pointer-events-none"></div>
+  <div class="max-w-4xl mx-auto px-6 py-12 relative">
+    <a href="index.html" class="text-sm no-underline">&larr; Volver al trabajo</a>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-white mt-4 tracking-tight leading-tight">Pseudocodigo de Matriculator</h1>
+    <p class="mt-5 max-w-3xl text-lg text-blue-200">Pseudocodigo en Python del flujo antes y despues de integrar el modelo. No es codigo ejecutable: las funciones auxiliares y las librerias son ilustrativas.</p>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 py-10">
+
+<section>
+  <h2>1. Antes: preparacion del modelo</h2>
+  <p>Carga del banco de imagenes anotadas, preprocesado, entrenamiento a partir de un modelo preentrenado, validacion y guardado.</p>
+  <div class="bloque"><button class="copiar" type="button">Copiar</button><pre><code class="language-python"># PSEUDOCODIGO:
+# Preparacion, entrenamiento y validacion del modelo
+
+# Libreria del modelo de deteccion de objetos (localiza la matricula en la imagen)
+from yolov8 import YOLOv8
+# Libreria de OCR (lee los caracteres de la matricula ya recortada)
+from ocr_library import PaddleOCR
+# Libreria numerica, util para manejar imagenes como matrices de numeros
+import numpy as np
+
+# Paso 1: Cargar dataset de imagenes anotadas
+def preparar_dataset():
+    # Lee todas las imagenes ficticias del banco de pruebas (sin personas identificables)
+    imagenes = cargar_imagenes_desde_banco_datos('dataset_matriculas/')
+    # Lee la posicion y el texto de la matricula de cada imagen (la "respuesta correcta")
+    anotaciones = cargar_anotaciones('labels.json')
+    # Dividir en train, val, test (80%, 10%, 10%)
+    # train: para aprender | val: para ajustar | test: para la nota final, sin haberlo visto
+    train_set, val_set, test_set = dividir_dataset(imagenes, anotaciones)
+    # Devuelve los tres conjuntos para usarlos en los pasos siguientes
+    return train_set, val_set, test_set
+
+# Paso 2: Preprocesamiento de imagenes
+def preprocesar_imagen(imagen):
+    # El modelo exige un tamano fijo de entrada: 640 x 640 pixeles
+    imagen_redimensionada = redimensionar(imagen, (640, 640))
+    # Escala los valores de los pixeles a un rango pequeno (por ejemplo 0 a 1) para que el modelo aprenda mejor
+    imagen_normalizada = normalizar(imagen_redimensionada)
+    # Imagen lista para entrar al modelo
+    return imagen_normalizada
+
+# Paso 3: Entrenamiento del modelo
+def entrenar_modelo(train_set):
+    # Partimos de un modelo ya entrenado (yolov8n = version pequena): ahorra datos y tiempo
+    modelo = YOLOv8('yolov8n.pt')  # Modelo preentrenado
+    # Una epoca = una pasada completa por todo el conjunto de entrenamiento
+    for epoca in range(50):
+        # Se recorre el conjunto de entrenamiento por lotes (grupos de imagenes)
+        for lote in train_set:
+            # Misma preparacion que se aplicara despues en la aplicacion real
+            imagen_preprocesada = preprocesar_imagen(lote['imagen'])
+            # El modelo intenta localizar la matricula
+            prediccion = modelo.predecir(imagen_preprocesada)
+            # Mide cuanto se equivoca comparando con la etiqueta real
+            perdida = calcular_perdida(prediccion, lote['etiqueta'])
+            # Corrige el modelo para equivocarse menos la proxima vez
+            actualizar_pesos(modelo, perdida)
+    # Devuelve el modelo ya ajustado
+    return modelo
+
+# Paso 4: Validacion del modelo
+def validar_modelo(modelo, val_set):
+    # Aqui se guardara la seguridad (confianza) de cada prediccion
+    confianzas = []
+    # Se usan imagenes que el modelo no ha visto al entrenar
+    for lote in val_set:
+        imagen_preprocesada = preprocesar_imagen(lote['imagen'])
+        prediccion = modelo.predecir(imagen_preprocesada)
+        # Extrae de 0 a 1 lo seguro que esta el modelo de su respuesta
+        confianza = obtener_confianza(prediccion)
+        confianzas.append(confianza)
+    # Resume todas las confianzas en un unico numero (por ejemplo, la media)
+    precision_promedio = calcular_metrica(confianzas)
+    # Sirve para decidir si el modelo es suficientemente bueno
+    return precision_promedio
+
+# Paso 5: Guardar modelo entrenado
+def guardar_modelo(modelo):
+    # Guarda el modelo en un fichero para no tener que entrenarlo cada vez (v1 = primera version)
+    modelo.guardar('modelo_matriculator_v1.pt')
+    print('Modelo guardado exitosamente')
+
+# Ejecutar pipeline de preparacion
+# 1. Prepara los datos
+train_set, val_set, test_set = preparar_dataset()
+# 2. Entrena con el conjunto de entrenamiento
+modelo_entrenado = entrenar_modelo(train_set)
+# 3. Mide la calidad con el conjunto de validacion
+precision = validar_modelo(modelo_entrenado, val_set)
+# 4. Guarda el resultado para usarlo en la aplicacion
+guardar_modelo(modelo_entrenado)
+# Muestra la precision como porcentaje con 2 decimales (por ejemplo, 92.50%)
+print(f'Precision en validacion: {precision:.2%}')</code></pre></div>
+</section>
+
+<section>
+  <h2>2. Despues: integracion en la aplicacion</h2>
+  <p>Flujo de inferencia cuando la persona sube una imagen: validacion, deteccion de la matricula, OCR, evaluacion de la confianza (umbral 85%) y derivacion a revision humana si es baja.</p>
+  <div class="bloque"><button class="copiar" type="button">Copiar</button><pre><code class="language-python"># PSEUDOCODIGO: DESPUES de integrar el modelo en la aplicacion
+# Flujo de inferencia cuando el usuario interactua con la aplicacion
+
+# Mismo modelo de deteccion que se entreno antes
+from yolov8 import YOLOv8
+# Libreria de OCR para leer el texto de la matricula
+from ocr_library import PaddleOCR
+
+# Paso 1: Recepcion de imagen desde interfaz web
+def recibir_imagen(archivo_usuario):
+    # Convierte el fichero subido por la persona en una imagen que el programa pueda tratar
+    imagen = cargar_imagen(archivo_usuario)
+    return imagen
+
+# Paso 2: Validacion de formato
+def validar_formato(imagen):
+    # Se intenta validar; si una condicion falla, salta al bloque except
+    try:
+        # Solo se aceptan JPG y PNG
+        assert imagen.formato in ['JPG', 'PNG']
+        # Limite de tamano para evitar ficheros enormes (10 MB)
+        assert imagen.tamano &lt; 10_MB
+        # Si pasa las dos comprobaciones, el fichero es valido
+        return True
+    except AssertionError:
+        # Alguna condicion ha fallado: el fichero no es valido
+        return False  # Enviar mensaje error al usuario
+
+# Paso 3: Preprocesamiento
+def preprocesar_imagen(imagen):
+    # Mismo tamano de entrada que en el entrenamiento (si no, el modelo rinde peor)
+    imagen_redimensionada = redimensionar(imagen, (640, 640))
+    # Misma escala de valores que en el entrenamiento
+    imagen_normalizada = normalizar(imagen_redimensionada)
+    return imagen_normalizada
+
+# Paso 4: Cargar modelo entrenado
+def cargar_modelo():
+    # Carga el fichero guardado al entrenar (no se vuelve a entrenar)
+    modelo = YOLOv8.cargar('modelo_matriculator_v1.pt')
+    # Prepara el OCR; use_gpu=True lo acelera si hay tarjeta grafica disponible
+    ocr = PaddleOCR(use_gpu=True)
+    # Devuelve los dos componentes necesarios para leer la matricula
+    return modelo, ocr
+
+# Paso 5: Inferencia (deteccion + OCR)
+def inferencia(imagen_preprocesada, modelo, ocr):
+    # Deteccion de matricula (bounding box)
+    # El modelo devuelve la lista de zonas donde cree que hay matriculas
+    detecciones = modelo.predecir(imagen_preprocesada)
+    # Nos quedamos con la primera (la mas probable)
+    caja_matricula = detecciones[0]  # Coordenadas x1, y1, x2, y2
+    # Seguridad del modelo al localizar la matricula (de 0 a 1)
+    confianza_deteccion = detecciones.confianza
+
+    # Extraer region de matricula
+    # Recorta solo la zona de la matricula: filas de y1 a y2, columnas de x1 a x2
+    matricula_crop = imagen_preprocesada[caja_matricula.y1:caja_matricula.y2, caja_matricula.x1:caja_matricula.x2]
+
+    # OCR para leer caracteres
+    # Convierte la imagen recortada en texto
+    texto_matricula = ocr.leer_texto(matricula_crop)
+    # Seguridad del OCR al leer los caracteres (de 0 a 1)
+    confianza_ocr = ocr.confianza
+
+    # Resultado en formato clave-valor (se enviara como JSON a la interfaz)
+    return {
+        # Texto leido, por ejemplo "1234 ABC"
+        'matricula': texto_matricula,
+        # Se toma la menor de las dos: la cadena es tan fiable como su eslabon mas debil
+        'confianza': min(confianza_deteccion, confianza_ocr),
+        # Posicion de la matricula, util para dibujarla en la imagen o revisarla
+        'caja': caja_matricula
+    }
+
+# Paso 6: Evaluacion de confianza
+def evaluar_confianza(resultado):
+    # Umbral fijado al evaluar el modelo: por debajo, se pide revision humana
+    umbral = 0.85  # 85%
+    # True si el resultado es suficientemente fiable; False si no
+    return resultado['confianza'] &gt;= umbral
+
+# Paso 7: Bifurcacion segun confianza
+def procesar_resultado(resultado, confianza_valida):
+    if confianza_valida:
+        # Registro automatico
+        # Se guarda sin intervencion humana, marcado como automatico
+        guardar_registro(resultado, automatico=True)
+        mensaje = f'Matricula detectada: {resultado["matricula"]}'
+    else:
+        # Derivar a revision humana
+        # Se guarda como pendiente para que una persona lo compruebe y corrija
+        guardar_pendiente_revision(resultado)
+        mensaje = 'Confianza baja. Requiere revision manual.'
+    # Mensaje que se mostrara en la pantalla de la persona usuaria
+    return mensaje
+
+# Paso 8: Salida final
+def mostrar_resultado(mensaje, resultado):
+    # Envia la respuesta a la interfaz web (en formato JSON)
+    enviar_respuesta_web({
+        'mensaje': mensaje,
+        # .get evita un error si no hay matricula (por ejemplo, cuando el fichero no es valido)
+        'matricula': resultado.get('matricula'),
+        # Convierte 0.9231 en 92.31 para mostrarlo como porcentaje
+        'confianza': round(resultado['confianza'] * 100, 2)
+    })
+
+# FLUJO PRINCIPAL
+# 1. Entrada: la persona sube una imagen
+imagen = recibir_imagen(archivo_usuario)
+
+# 2. Control de errores: si el fichero no es valido, se avisa y se termina
+if not validar_formato(imagen):
+    mostrar_resultado('Error: formato no valido', {})
+else:
+    # 3. Prepara la imagen igual que en el entrenamiento
+    imagen_prep = preprocesar_imagen(imagen)
+    # 4. Carga el modelo y el OCR
+    modelo, ocr = cargar_modelo()
+    # 5. Detecta la matricula y la lee
+    resultado = inferencia(imagen_prep, modelo, ocr)
+    # 6. Comprueba si el resultado es suficientemente fiable
+    confianza_ok = evaluar_confianza(resultado)
+    # 7. Registra automaticamente o deriva a revision humana
+    mensaje = procesar_resultado(resultado, confianza_ok)
+    # 8. Salida: devuelve el mensaje y la matricula a la interfaz
+    mostrar_resultado(mensaje, resultado)</code></pre></div>
+</section>
+
+</main>
+
+<footer class="border-t border-cb-700">
+  <p class="max-w-4xl mx-auto px-6 py-6 text-sm text-blue-300 mb-0">
+    <a href="index.html">&larr; Volver al trabajo</a> | Version original en notebook: <a href="Pseudocodigo.ipynb">Pseudocodigo.ipynb</a>
+  </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  hljs.highlightAll();
+  document.querySelectorAll(".copiar").forEach(function (boton) {
+    boton.addEventListener("click", function () {
+      var texto = boton.parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(texto).then(function () {
+        boton.textContent = "Copiado";
+        setTimeout(function () { boton.textContent = "Copiar"; }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>
