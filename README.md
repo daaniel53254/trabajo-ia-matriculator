@@ -8,9 +8,9 @@
   * **Igor:** Análisis de Google Trends, comparativa de lenguajes y matriz de decisión (Paso 2).
   * **Dani:** Desarrollo de formatos de datos, notebooks de prueba, web estática y documentación (Pasos 4 y 5).
 * **Temporalización:**
-  **Dia 1:** Elección de opción (Matriculator), extracción de Google Trends y definición teórica -- Igor.
-  **Dia 2:** Comparativa de lenguajes, matriz de decisión y redacción del flujo técnico -- Byron.
-  **Dia 3:** Creación de notebooks, desarrollo web en HTML, subida a Netlify y revisión final --  Dani.
+  * **Dia 1:** Elección de opción (Matriculator), extracción de Google Trends y definición teórica -- Igor.
+  * **Dia 2:** Comparativa de lenguajes, matriz de decisión y redacción del flujo técnico -- Byron.
+  * **Dia 3:** Creación de notebooks, desarrollo web en HTML, subida a Netlify y revisión final --  Dani.
 ---
 
 # 1. Aplicación hipotética: Matriculator
