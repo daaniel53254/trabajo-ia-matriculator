@@ -4,8 +4,8 @@
 * **Integrantes del grupo:** 3 personas.
 * **Reparto de tareas:**
   * **Byron:** Definición del caso de uso (Paso 1) y diseño del flujo y pseudocódigo (Paso 3).
-  * **Igor:** Análisis de Google Trends, comparativa de lenguajes y matriz de decisión (Paso 2).
-  * **Dani:** Desarrollo de formatos de datos, notebooks de prueba, web estática y documentación (Pasos 4 y 5).
+  * **Igor:** Análisis de Google Trends, comparativa de lenguajes y matriz de decisión (Paso 2 y 5).
+  * **Dani:** Programa y diagrama de flujo (paso 3), los notebook y la demo (paso 4.c), web estática y documentación.
 * **Temporalización:**
   * **Dia 1:** Elección de opción (Matriculator), extracción de Google Trends y definición teórica -- Igor.
   * **Dia 2:** Comparativa de lenguajes, matriz de decisión y redacción del flujo técnico -- Byron.
