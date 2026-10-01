@@ -292,8 +292,79 @@ Google Trends (Datos de interés global de lenguajes de programación).
 
 ---
 
-# 8. Anexos
+# 8. Anexo de uso de Inteligencia Artificial
 
+Durante la realización del trabajo hemos utilizado principalmente **ChatGPT Pro y Gemini** como apoyo. Las hemos utilizado para resolver dudas, entender conceptos, comparar lenguajes de programación y revisar algunas partes del trabajo.
+
+Cuando alguna explicación era demasiado técnica o no la entendíamos bien, hacíamos repreguntas para que se explicara de una forma más sencilla. También comparábamos algunas respuestas y revisábamos la información antes de incluirla en el trabajo.
+
+La IA nos ha servido como apoyo, pero las decisiones finales sobre Matriculator, los lenguajes elegidos y la organización del trabajo las hemos tomado nosotros.
+
+## 8.1. Aplicación hipotética: Matriculator
+
+### Preguntas y prompts utilizados:
+
+Preguntamos cómo podía funcionar una aplicación que detectara y leyera matrículas en imágenes, qué datos necesitaría y en qué momento debe intervenir una persona.
+Algunas preguntas fueron: “¿Cómo funcionaría una aplicación que detecta matrículas en imágenes?”, “¿Qué entradas y salidas tendría?” o “¿En qué momento debería revisar una persona el resultado de la IA?”.
+
+### Repreguntas y cambios realizados:
+
+Algunas respuestas tenían demasiados detalles, por lo que pedimos explicaciones más sencillas y eso lo adaptamos a nuestra aplicación.
+También decidimos trabajar con imágenes de prueba y no con datos personales reales.
+
+## 8.22. Comparación de lenguajes
+
+### Preguntas y prompts utilizados:
+
+Preguntamos por las diferencias entre **Python, JavaScript, Node.js, R, C++, PHP y Java**, y por cuáles serían más adecuados para la aplicación y para la parte de Inteligencia Artificial.
+Algunas preguntas fueron: “¿Qué lenguaje sería más adecuado para la IA de Matriculator?”, “¿Qué diferencia hay entre Python y JavaScript?” o “¿Node.js es un lenguaje de programación?”.
+
+### Repreguntas y cambios realizados:
+
+Pedimos varias explicaciones más sencillas para entender las diferencias entre los lenguajes.
+
+También revisamos las características que pedía el profesor y las relacionamos con Matriculator, después utilizamos una tabla de decisión para tomar la decisión final.
+Al final elegimos **Python** para la parte de Inteligencia Artificial y **JavaScript** para la aplicación e interfaz web.
+
+## 8.3. Flujo y pseudocódigo
+
+### Preguntas y prompts utilizados:
+
+Preguntamos cómo dividir el funcionamiento de Matriculator en diferentes etapas y qué elementos debía tener el pseudocódigo.
+
+### Repreguntas y cambios realizados:
+
+Fuimos haciendo el proceso más simple, añadimos control de errores y una revisión humana cuando la IA no estaba segura.
+
+## 8.4. Lenguajes de marcado y formatos de datos
+
+### Preguntas y prompts utilizados:
+
+Preguntamos por la función de **HTML, XML, JSON, Markdown y CSV** y cómo podría usarse dentro de Matriculator. tambien preguntamos 
+qué librerías de Python se utilizan para trabajar con HTML, CSV y JSON.
+
+### Repreguntas y cambios realizados:
+
+Pedimos ejemplos sencillos para entender mejor cómo funciona cada formato y después los usamos en las diferentes partes del proyecto.
+
+## 8.5. Preguntas adicionales
+
+### Preguntas y prompts utilizados:
+
+Preguntamos si Matriculator sería una IA débil o fuerte y si sería mejor utilizar un modelo preentrenado o entrenar uno desde cero.
+
+### Repreguntas y cambios realizados:
+
+Revisamos las respuestas para adaptarlas a nuestro proyecto y dejamos claro que es un proyecto hipotético y no se crea ni se entrena ningún modelo de IA. 
+Diferenciamos entre las herramientas que hemos utilizado en el trabajo y las que se proponen para una futura implementación, como YOLO y OCR.
+
+## 8.6 Reflexión sobre el uso de IA
+
+La IA nos ayudó principalmente a entender conceptos que al principio resultaban complicados, comparar diferentes opciones y revisar algunas partes del trabajo.
+
+Nos ayudó a detectar errores o confusiones, pero no utilizamos todas sus respuestas directamente. Cuando una respuesta no encajaba con el proyecto, la cambiábamos o la descartábamos.
+Una decisión importante tomada por el grupo fue utilizar **Python** para la Inteligencia Artificial y **JavaScript** para la aplicación e interfaz web, después de comparar las diferentes opciones.
+La IA fue una herramienta de apoyo durante el trabajo, pero la elección de Matriculator, los lenguajes, la tabla de decisión y las decisiones finales fueron realizadas por el grupo.
 
 
 ---
