@@ -295,9 +295,7 @@ Google Trends (Datos de interés global de lenguajes de programación).
 # 8. Anexo de uso de Inteligencia Artificial
 
 Durante la realización del trabajo hemos utilizado principalmente **ChatGPT Pro y Gemini** como apoyo. Las hemos utilizado para resolver dudas, entender conceptos, comparar lenguajes de programación y revisar algunas partes del trabajo.
-
 Cuando alguna explicación era demasiado técnica o no la entendíamos bien, hacíamos repreguntas para que se explicara de una forma más sencilla. También comparábamos algunas respuestas y revisábamos la información antes de incluirla en el trabajo.
-
 La IA nos ha servido como apoyo, pero las decisiones finales sobre Matriculator, los lenguajes elegidos y la organización del trabajo las hemos tomado nosotros.
 
 ## 8.1. Aplicación hipotética: Matriculator
