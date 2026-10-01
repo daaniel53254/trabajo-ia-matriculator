@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parseo de JSON - Matriculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cb: { 950: "#081f4a", 900: "#0b2a5b", 800: "#123a7a", 700: "#1b4b98", 600: "#2563c9" }
+          }
+        }
+      }
+    };
+  </script>
+  <style type="text/tailwindcss">
+    @layer base {
+      body { font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+      h2 { @apply text-2xl md:text-3xl font-bold text-white tracking-tight pl-4 mb-3 relative; }
+      h2::before { content: ""; @apply absolute left-0 top-1 bottom-1 w-1.5 rounded-full bg-gradient-to-b from-sky-300 to-cb-600; }
+      h3 { @apply text-lg font-semibold text-sky-300 mt-8 mb-3 tracking-tight; }
+      p  { @apply leading-relaxed mb-3; }
+      strong { @apply text-white; }
+      a  { @apply text-sky-300 underline underline-offset-4 decoration-sky-300/40 transition-colors hover:text-sky-200 hover:decoration-sky-200; }
+      code { @apply bg-cb-950 text-sky-200 px-1.5 py-0.5 rounded-md text-sm border border-cb-700; }
+      table { @apply w-full text-sm text-left border-collapse; }
+      thead { @apply bg-gradient-to-r from-cb-600 to-cb-700 text-white; }
+      th { @apply px-4 py-3 font-semibold whitespace-nowrap; }
+      td { @apply px-4 py-2.5 border-t border-cb-700/70 align-top; }
+      tbody tr:nth-child(even) { @apply bg-cb-900/40; }
+      tbody tr:hover { @apply bg-cb-700/50; }
+      section { @apply mb-14; }
+    }
+    @layer components {
+      .wrap { @apply overflow-x-auto rounded-xl border border-cb-700 bg-cb-800/60 my-4 shadow-lg shadow-cb-950/40; }
+      .caja { @apply bg-cb-800/60 border border-cb-700 rounded-xl p-5 my-4 shadow-lg shadow-cb-950/40; }
+      .codigo { @apply rounded-xl border border-cb-700 bg-cb-950 p-4 text-sm overflow-x-auto my-0 text-sky-100 whitespace-pre; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .boton { @apply rounded-lg border border-cb-700 bg-cb-800 px-3 py-1.5 text-sm text-blue-100 transition-colors hover:bg-cb-700 hover:text-white cursor-pointer; }
+      .ficha { @apply inline-block rounded-md px-2 py-1 text-xs border m-0.5; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .t-sym  { @apply bg-cb-950 border-cb-700 text-blue-200; }
+      .t-key  { @apply bg-sky-400/15 border-sky-400/50 text-sky-200; }
+      .t-str  { @apply bg-cb-600/30 border-cb-600 text-white; }
+      .t-num  { @apply bg-emerald-400/10 border-emerald-400/40 text-emerald-200; }
+      .t-lit  { @apply bg-amber-400/10 border-amber-400/40 text-amber-200; }
+      .t-bad  { @apply bg-red-500/20 border-red-400 text-red-200; }
+    }
+    html { scrollbar-color: #1b4b98 #081f4a; }
+  </style>
+</head>
+<body class="bg-cb-900 text-blue-100 antialiased">
+
+<header class="border-b border-cb-700 bg-gradient-to-br from-cb-600/50 via-cb-800/40 to-cb-900 relative overflow-hidden">
+  <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-sky-400/10 blur-3xl pointer-events-none"></div>
+  <div class="max-w-4xl mx-auto px-6 py-12 relative">
+    <a href="index.html" class="text-sm no-underline">&larr; Volver al trabajo</a>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-white mt-4 tracking-tight leading-tight">Como se parsea un JSON</h1>
+    <p class="mt-5 max-w-3xl text-lg text-blue-200">Parsear es convertir un texto con formato JSON en datos que el programa puede usar. Es lo que hace Matriculator cuando el servicio de Python devuelve la matricula y la confianza a la interfaz de JavaScript.</p>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 py-10">
+
+<section>
+  <h2>1. Idea general</h2>
+  <p>El JSON viaja siempre como <strong>texto</strong>. Para usarlo hay que parsearlo en tres pasos:</p>
+  <div class="grid gap-3 sm:grid-cols-3 my-4">
+    <div class="caja m-0"><p class="text-sky-300 font-semibold mb-1">1. Texto</p><p class="text-sm mb-0">Llega una cadena de caracteres, sin estructura todavia.</p></div>
+    <div class="caja m-0"><p class="text-sky-300 font-semibold mb-1">2. Piezas</p><p class="text-sm mb-0">Se recorre el texto y se separan llaves, claves, valores y signos.</p></div>
+    <div class="caja m-0"><p class="text-sky-300 font-semibold mb-1">3. Datos</p><p class="text-sm mb-0">Con las piezas se construye un objeto (diccionario en Python) con tipos reales.</p></div>
+  </div>
+  <p>Los datos de entrada sinteticos del apartado 3 de <a href="demo_lenguajes.ipynb">demo_lenguajes.ipynb</a> (imagen, camara, tamano...), en los dos lenguajes del proyecto:</p>
+  <div class="grid gap-3 md:grid-cols-2 my-4">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-sky-300 font-semibold mb-1">Python (servicio de IA)</p>
+      <pre class="codigo">import json
+
+texto = '{"imagen": "entrada_01.jpg", "camara": "entrada_norte", "tamano_mb": 2.4}'
+
+# loads = leer desde un texto (string)
+datos = json.loads(texto)
+
+print(datos["camara"])      # entrada_norte
+print(datos["tamano_mb"])   # 2.4 (numero)</pre>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-wide text-sky-300 font-semibold mb-1">JavaScript (interfaz web)</p>
+      <pre class="codigo">const texto = '{"imagen": "entrada_01.jpg", "camara": "entrada_norte", "tamano_mb": 2.4}';
+
+// parse = leer desde un texto (string)
+const datos = JSON.parse(texto);
+
+console.log(datos.camara);      // entrada_norte
+console.log(datos.tamano_mb);   // 2.4 (numero)</pre>
+    </div>
+  </div>
+  <p class="text-sm text-blue-300">En el notebook se usa <code>json.load</code> (sin la s) porque lee desde un fichero. <code>json.loads</code> lee desde un texto, que es lo que llega por la red.</p>
+</section>
+
+<section>
+  <h2>2. Pruebalo</h2>
+  <p>Edita el JSON y mira como se parsea al momento. Prueba tambien los ejemplos con errores.</p>
+
+  <div class="flex flex-wrap gap-2 mb-3">
+    <button class="boton" type="button" data-ejemplo="ok">Ejemplo del notebook</button>
+    <button class="boton" type="button" data-ejemplo="anidado">Con datos anidados</button>
+    <button class="boton" type="button" data-ejemplo="comillas">Error: comillas simples</button>
+    <button class="boton" type="button" data-ejemplo="coma">Error: coma de mas</button>
+    <button class="boton" type="button" data-ejemplo="falta">Error: falta una llave</button>
+  </div>
+
+  <label for="entrada" class="text-sm font-semibold text-white">Texto JSON</label>
+  <textarea id="entrada" rows="9" spellcheck="false" class="w-full mt-1 rounded-xl border border-cb-700 bg-cb-950 p-4 text-sm text-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-400" style="font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;"></textarea>
+
+  <div id="estado" class="mt-3 rounded-xl border px-4 py-3 text-sm" role="status"></div>
+
+  <h3>Paso 2: piezas en las que se separa el texto</h3>
+  <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs mb-2">
+    <span><span class="ficha t-sym">{ } [ ] : ,</span> signos</span>
+    <span><span class="ficha t-key">"clave"</span> clave</span>
+    <span><span class="ficha t-str">"texto"</span> texto</span>
+    <span><span class="ficha t-num">0.95</span> numero</span>
+    <span><span class="ficha t-lit">true</span> true, false, null</span>
+  </div>
+  <div id="piezas" class="caja m-0 leading-loose min-h-[3rem]"></div>
+
+  <h3>Paso 3: datos resultantes</h3>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Camino</th><th>Tipo</th><th>Valor</th><th>En Python</th><th>En JavaScript</th></tr></thead>
+      <tbody id="tabla"></tbody>
+    </table>
+  </div>
+  <p class="text-sm text-blue-300">Fijate en que <code>"2.4"</code> entre comillas seria un texto, y <code>2.4</code> sin comillas es un numero con el que se puede calcular.</p>
+</section>
+
+<section>
+  <h2>3. Errores tipicos</h2>
+  <p>Si el texto no cumple la sintaxis, el parseo falla y el programa debe controlarlo (en Matriculator, mostrando un error y no una pantalla en blanco).</p>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Error</th><th>Incorrecto</th><th>Correcto</th></tr></thead>
+      <tbody>
+        <tr><td>Comillas simples</td><td><code>{'camara': 'entrada_norte'}</code></td><td><code>{"camara": "entrada_norte"}</code></td></tr>
+        <tr><td>Coma final</td><td><code>{"a": 1, "b": 2,}</code></td><td><code>{"a": 1, "b": 2}</code></td></tr>
+        <tr><td>Clave sin comillas</td><td><code>{camara: "entrada_norte"}</code></td><td><code>{"camara": "entrada_norte"}</code></td></tr>
+        <tr><td>Falta cerrar</td><td><code>{"a": 1</code></td><td><code>{"a": 1}</code></td></tr>
+        <tr><td>Valor no valido</td><td><code>{"a": undefined}</code></td><td><code>{"a": null}</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid gap-3 md:grid-cols-2 my-4">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-sky-300 font-semibold mb-1">Python</p>
+      <pre class="codigo">try:
+    datos = json.loads(texto)
+except json.JSONDecodeError as error:
+    print("JSON no valido:", error)</pre>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-wide text-sky-300 font-semibold mb-1">JavaScript</p>
+      <pre class="codigo">try {
+  const datos = JSON.parse(texto);
+} catch (error) {
+  console.log("JSON no valido:", error.message);
+}</pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-cb-700">
+  <p class="max-w-4xl mx-auto px-6 py-6 text-sm text-blue-300 mb-0">
+    <a href="index.html">&larr; Volver al trabajo</a> | Notebook original: <a href="demo_lenguajes.ipynb">demo_lenguajes.ipynb</a>
+  </p>
+</footer>
+
+<script>
+  var EJEMPLOS = {
+    ok: '{\n  "imagen": "entrada_01.jpg",\n  "formato": "JPG",\n  "tamano_mb": 2.4,\n  "camara": "entrada_norte",\n  "fecha": "2026-09-30 08:15:00",\n  "sintetica": true\n}',
+    anidado: '{\n  "imagen": "prueba_02.jpg",\n  "resultado": {\n    "matricula": "5678DEF",\n    "confianza": 0.81,\n    "caja": [120, 340, 410, 395]\n  },\n  "revision_humana": true,\n  "comentario": null\n}',
+    comillas: "{\n  'imagen': 'entrada_01.jpg',\n  'camara': 'entrada_norte'\n}",
+    coma: '{\n  "imagen": "entrada_01.jpg",\n  "camara": "entrada_norte",\n}',
+    falta: '{\n  "imagen": "entrada_01.jpg",\n  "camara": "entrada_norte"'
+  };
+
+  var entrada = document.getElementById("entrada");
+  var estado = document.getElementById("estado");
+  var piezas = document.getElementById("piezas");
+  var tabla = document.getElementById("tabla");
+
+  // Paso 2: separar el texto en piezas (tokens). Cada pieza tiene tipo y texto.
+  var PATRON = /\s*("(?:[^"\\\n]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[{}\[\]:,])/y;
+
+  function trocear(texto) {
+    var lista = [];
+    var pos = 0;
+    var fin = texto.replace(/\s+$/, "").length;
+    while (pos < fin) {
+      PATRON.lastIndex = pos;
+      var m = PATRON.exec(texto);
+      if (!m) {
+        // Lo que queda no se reconoce: se marca como pieza erronea
+        lista.push({ tipo: "bad", texto: texto.slice(pos, fin).trim().split(/\s+/)[0] });
+        break;
+      }
+      var t = m[1];
+      var tipo;
+      if (/^[{}\[\]:,]$/.test(t)) tipo = "sym";
+      else if (t[0] === '"') tipo = "str";
+      else if (/^(true|false|null)$/.test(t)) tipo = "lit";
+      else tipo = "num";
+      lista.push({ tipo: tipo, texto: t });
+      pos = PATRON.lastIndex;
+    }
+    // Un texto es clave si va justo antes de ":"
+    for (var i = 0; i < lista.length - 1; i++) {
+      if (lista[i].tipo === "str" && lista[i + 1].texto === ":") lista[i].tipo = "key";
+    }
+    return lista;
+  }
+
+  function dibujarPiezas(lista) {
+    piezas.textContent = "";
+    if (!lista.length) {
+      piezas.textContent = "Escribe algun JSON arriba.";
+      return;
+    }
+    lista.forEach(function (p) {
+      var span = document.createElement("span");
+      span.className = "ficha t-" + p.tipo;
+      span.textContent = p.texto;
+      piezas.appendChild(span);
+    });
+  }
+
+  // Paso 3: recorrer el objeto ya parseado y listar cada valor con su camino
+  function tipoDe(v) {
+    if (v === null) return "null";
+    if (Array.isArray(v)) return "lista";
+    if (typeof v === "object") return "objeto";
+    if (typeof v === "string") return "texto";
+    if (typeof v === "number") return "numero";
+    return "booleano";
+  }
+
+  function accesoPython(ruta) {
+    return "datos" + ruta.map(function (r) { return typeof r === "number" ? "[" + r + "]" : '["' + r + '"]'; }).join("");
+  }
+
+  function accesoJs(ruta) {
+    return "datos" + ruta.map(function (r) {
+      if (typeof r === "number") return "[" + r + "]";
+      return /^[A-Za-z_$][\w$]*$/.test(r) ? "." + r : '["' + r + '"]';
+    }).join("");
+  }
+
+  function aplanar(valor, ruta, filas) {
+    var tipo = tipoDe(valor);
+    var hijos = tipo === "objeto" ? Object.keys(valor) : tipo === "lista" ? valor.map(function (_, i) { return i; }) : null;
+    if (ruta.length) {
+      var resumen;
+      if (hijos) resumen = tipo === "lista" ? "lista de " + hijos.length : "objeto con " + hijos.length + " claves";
+      else resumen = JSON.stringify(valor);
+      filas.push({ ruta: ruta, tipo: tipo, valor: resumen });
+    }
+    if (hijos) hijos.forEach(function (k) { aplanar(valor[k], ruta.concat([k]), filas); });
+  }
+
+  function celda(fila, texto, codigo) {
+    var td = document.createElement("td");
+    if (codigo) {
+      var c = document.createElement("code");
+      c.textContent = texto;
+      td.appendChild(c);
+    } else {
+      td.textContent = texto;
+    }
+    fila.appendChild(td);
+  }
+
+  function dibujarTabla(dato) {
+    tabla.textContent = "";
+    var filas = [];
+    if (dato !== undefined) {
+      if (tipoDe(dato) === "objeto" || tipoDe(dato) === "lista") aplanar(dato, [], filas);
+      else filas.push({ ruta: [], tipo: tipoDe(dato), valor: JSON.stringify(dato) });
+    }
+    if (!filas.length) {
+      var tr = document.createElement("tr");
+      var td = document.createElement("td");
+      td.colSpan = 5;
+      td.textContent = dato === undefined ? "No hay datos: el texto no es un JSON valido." : "El JSON esta vacio.";
+      tr.appendChild(td);
+      tabla.appendChild(tr);
+      return;
+    }
+    filas.forEach(function (f) {
+      var tr = document.createElement("tr");
+      celda(tr, f.ruta.join(" > ") || "(valor raiz)", false);
+      celda(tr, f.tipo, false);
+      celda(tr, f.valor, true);
+      celda(tr, accesoPython(f.ruta), true);
+      celda(tr, accesoJs(f.ruta), true);
+      tabla.appendChild(tr);
+    });
+  }
+
+  function ponerEstado(ok, mensaje) {
+    estado.textContent = mensaje;
+    estado.className = "mt-3 rounded-xl border px-4 py-3 text-sm " +
+      (ok ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-100" : "border-red-400/60 bg-red-500/10 text-red-100");
+  }
+
+  function actualizar() {
+    var texto = entrada.value;
+    dibujarPiezas(trocear(texto));
+    if (!texto.trim()) {
+      ponerEstado(false, "El texto esta vacio.");
+      dibujarTabla(undefined);
+      return;
+    }
+    try {
+      var dato = JSON.parse(texto);
+      ponerEstado(true, "JSON valido: se ha parseado sin errores (tipo de la raiz: " + tipoDe(dato) + ").");
+      dibujarTabla(dato);
+    } catch (error) {
+      ponerEstado(false, "JSON no valido: " + error.message);
+      dibujarTabla(undefined);
+    }
+  }
+
+  entrada.addEventListener("input", actualizar);
+  document.querySelectorAll("[data-ejemplo]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      entrada.value = EJEMPLOS[b.getAttribute("data-ejemplo")];
+      actualizar();
+    });
+  });
+
+  entrada.value = EJEMPLOS.ok;
+  actualizar();
+</script>
+</body>
+</html>

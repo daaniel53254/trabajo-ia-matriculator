@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matriculator - Trabajo RA1 Programacion de IA</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script>
     tailwind.config = {
       theme: {
@@ -52,6 +53,10 @@
       .enlace-indice { @apply block rounded-lg px-3 py-2 text-sm text-blue-100 no-underline whitespace-nowrap transition-all hover:bg-cb-700 hover:text-white hover:translate-x-0.5; }
       .enlace-indice.activo { @apply bg-sky-400 text-cb-950 font-semibold shadow-md shadow-sky-400/20 hover:bg-sky-400 hover:text-cb-950; }
     }
+    .codigo { margin: 1rem 0; border: 1px solid #1b4b98; border-radius: 0.75rem; background: #081f4a; overflow: hidden; box-shadow: 0 10px 15px -3px rgb(8 31 74 / 0.4); }
+    .codigo pre { margin: 0; overflow-x: auto; }
+    .codigo pre code { display: block; background: transparent; border: 0; padding: 1rem 1.25rem; font-size: 0.85rem; line-height: 1.6; color: #e0f2fe; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .codigo pre code.hljs { background: transparent; padding: 1rem 1.25rem; }
     html { scrollbar-color: #1b4b98 #081f4a; }
     main section { animation: aparecer .5s ease both; }
     @keyframes aparecer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
@@ -74,6 +79,7 @@
     <li><a class="enlace-indice" href="#matriz">4. Matriz de decision</a></li>
     <li><a class="enlace-indice" href="#flujo">5. Flujo y pseudocodigo</a></li>
     <li><a class="enlace-indice" href="#formatos">6. Marcado y formatos</a></li>
+    <li><a class="enlace-indice" href="#reflexion">7. Tipo de IA y modelo</a></li>
   </ul>
   <div class="hidden lg:block px-4 py-4 border-t border-cb-700 text-xs text-blue-200">
     <p class="mb-2">Bibliografia, organizacion y evidencias de IA:</p>
@@ -344,9 +350,167 @@ flowchart LR
     </table>
   </div>
 
+  <h3>6.1 Que es parsear</h3>
+  <p>HTML y JSON llegan al programa como <strong>texto</strong>. Parsear es recorrer ese texto y convertirlo en una estructura que se pueda consultar: un arbol de etiquetas en el caso del HTML, y diccionarios y listas en el caso del JSON. Asi, en lugar de buscar cadenas de caracteres a mano, se pide por ejemplo "todos los titulos" o "el campo <code>camara</code>".</p>
+
+  <h3>6.2 Librerias de Python</h3>
+  <div class="wrap">
+    <table>
+      <thead><tr><th>Libreria</th><th>Que hace</th><th>Se usa para</th><th>Viene con Python</th></tr></thead>
+      <tbody>
+        <tr><td class="font-semibold text-white">urllib</td><td>Descarga contenido de una direccion web</td><td>Obtener el texto de una pagina o de un JSON</td><td>Si</td></tr>
+        <tr><td class="font-semibold text-white">requests</td><td>Descarga contenido de forma mas sencilla; <code>.text</code> y <code>.json()</code></td><td>Lo mismo que urllib, con menos codigo y control de errores</td><td>No (<code>pip install requests</code>)</td></tr>
+        <tr><td class="font-semibold text-white">json</td><td>Convierte texto JSON en diccionarios y listas, y al reves</td><td>Leer los datos de entrada y las respuestas del servicio</td><td>Si</td></tr>
+        <tr><td class="font-semibold text-white">BeautifulSoup (bs4)</td><td>Convierte texto HTML en un arbol que se puede buscar</td><td>Sacar titulos, tablas, enlaces y textos de una pagina</td><td>No (<code>pip install beautifulsoup4</code>)</td></tr>
+        <tr><td class="font-semibold text-white">pandas</td><td>Tablas de datos (DataFrame) y calculos sobre ellas</td><td>Analizar lo extraido</td><td>No (<code>pip install pandas</code>)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><code>urllib</code> y <code>requests</code> solo <strong>traen</strong> el texto. Quien lo <strong>interpreta</strong> es <code>json</code> o <code>BeautifulSoup</code>. El flujo siempre es el mismo: descargar, parsear, extraer y analizar.</p>
+
+  <h3>6.3 Paso 1: descargar el contenido</h3>
+  <p>Ejemplo con esta misma pagina (el <code>index.html</code> del repositorio) y las dos librerias de descarga:</p>
+  <div class="codigo"><pre><code class="language-python"># Con urllib (incluida en Python)
+from urllib.request import urlopen
+
+URL = "https://raw.githubusercontent.com/igorr17/trabajo-ia-matriculator/main/index.html"
+html = urlopen(URL).read().decode("utf-8")
+
+# Con requests (mas simple)
+import requests
+
+respuesta = requests.get(URL, timeout=10)  # timeout evita quedarse esperando para siempre
+respuesta.raise_for_status()               # lanza un error si la descarga falla (404, 500...)
+html = respuesta.text                      # el HTML como texto
+print(respuesta.status_code)               # 200</code></pre></div>
+  <p>Con un JSON de un servicio, <code>requests</code> lo parsea directamente: <code>datos = requests.get(url).json()</code>. Si el JSON esta en un fichero o en un texto se usa <code>json.load</code> o <code>json.loads</code> (ver el anexo del final).</p>
+
+  <h3>6.4 Paso 2: extraer contenido con BeautifulSoup</h3>
+  <p>Con el HTML descargado se construye el arbol y se buscan las etiquetas: el titulo de la pagina, el titulo de cada seccion, cuantas tablas hay y a donde apuntan los enlaces.</p>
+  <div class="codigo"><pre><code class="language-python">from bs4 import BeautifulSoup
+
+soup = BeautifulSoup(html, "html.parser")   # texto -&gt; arbol de etiquetas
+
+print(soup.title.get_text())                # contenido de la etiqueta &lt;title&gt;
+
+for seccion in soup.find_all("section"):    # todas las etiquetas &lt;section&gt;
+    titulo = seccion.find("h2").get_text(strip=True)
+    print(seccion["id"], "-&gt;", titulo)    # seccion["id"] lee un atributo
+
+print("Tablas:", len(soup.find_all("table")))
+
+# Enlaces que no son del indice interno (los que empiezan por #)
+enlaces = [a["href"] for a in soup.find_all("a", href=True) if not a["href"].startswith("#")]
+print("Enlaces:", enlaces)</code></pre></div>
+  <p class="text-sm text-blue-300 mb-1">Salida:</p>
+  <div class="codigo"><pre><code class="nohighlight">Matriculator - Trabajo RA1 Programacion de IA
+aplicacion -&gt; 1. Aplicacion hipotetica: Matriculator
+trends -&gt; 2. Interes relativo en Google Trends
+comparativa -&gt; 3. Comparativa de lenguajes
+matriz -&gt; 4. Matriz de decision
+flujo -&gt; 5. Estructura del programa
+formatos -&gt; 6. Lenguajes de marcado y formatos de datos
+reflexion -&gt; 7. Tipo de IA y modelo
+Tablas: 9
+Enlaces: ['README.md', 'pseudocodigo.html', 'Pseudocodigo.ipynb', 'demo_lenguajes.ipynb', 'json.html', 'README.md']</code></pre></div>
+  <p>Metodos principales: <code>find_all("etiqueta")</code> devuelve todas, <code>find("etiqueta")</code> la primera, <code>select_one("#id table")</code> busca con selectores CSS, <code>get_text()</code> saca el texto y <code>elemento["atributo"]</code> lee un atributo.</p>
+
+  <h3>6.5 Paso 3: de una tabla del HTML a datos</h3>
+  <p>La tabla de la matriz de decision (apartado 4.1) es contenido de la pagina, pero para trabajar con ella hay que convertirla en un DataFrame de pandas:</p>
+  <div class="codigo"><pre><code class="language-python">import pandas as pd
+
+tabla = soup.select_one("#matriz table")                       # primera tabla del apartado 4
+cabecera = [th.get_text(strip=True) for th in tabla.thead.find_all("th")]
+
+filas = []
+for tr in tabla.tbody.find_all("tr"):                          # cada fila de la tabla
+    filas.append([celda.get_text(strip=True) for celda in tr.find_all(["td", "th"])])
+
+df = pd.DataFrame(filas, columns=cabecera)                     # lista de filas -&gt; tabla de datos
+print(df.to_string(index=False))</code></pre></div>
+  <p class="text-sm text-blue-300 mb-1">Salida:</p>
+  <div class="codigo"><pre><code class="nohighlight">                Criterio Peso Python JavaScript Node.js    R  C++  PHP Java
+    Herramientas para IA  30%      5          4       4    4    5    2    4
+    Trabajo con imagenes  25%      5          4       3    3    5    2    4
+Facilidad de aprendizaje  20%      5          5       4    4    2    4    3
+       Trabajo con datos  15%      5          4       4    5    3    2    4
+          Desarrollo web  10%      4          5       5    2    3    5    4
+                   TOTAL 100%   4,90       4,30    3,85 3,70 3,90 2,70 3,80</code></pre></div>
+
+  <h3>6.6 Paso 4: analizar los datos</h3>
+  <p>Una vez en un DataFrame, los datos ya no son texto de una pagina: se pueden calcular, comparar y guardar. Por ejemplo, <strong>comprobar que los totales publicados son correctos</strong> recalculando la suma ponderada y quedarse con el mejor lenguaje:</p>
+  <div class="codigo"><pre><code class="language-python">datos = df[df["Criterio"] != "TOTAL"].copy()                       # solo las filas de criterios
+datos["Peso"] = datos["Peso"].str.rstrip("%").astype(float) / 100  # "30%" -&gt; 0.30
+lenguajes = cabecera[2:]                                           # columnas Python, JavaScript...
+datos[lenguajes] = datos[lenguajes].astype(float)                  # "5" -&gt; 5.0
+
+# Suma ponderada: puntuacion x peso, sumado por lenguaje
+calculado = datos[lenguajes].mul(datos["Peso"], axis=0).sum().round(2)
+
+# Totales que aparecen en la pagina ("4,90" -&gt; 4.90)
+publicado = df[df["Criterio"] == "TOTAL"][lenguajes].iloc[0].str.replace(",", ".").astype(float)
+
+comparacion = pd.DataFrame({"calculado": calculado, "publicado": publicado})
+comparacion["coincide"] = comparacion["calculado"] == comparacion["publicado"]
+print(comparacion.to_string())
+print("Mejor lenguaje:", calculado.idxmax(), calculado.max())</code></pre></div>
+  <p class="text-sm text-blue-300 mb-1">Salida:</p>
+  <div class="codigo"><pre><code class="nohighlight">            calculado  publicado  coincide
+Python           4.90       4.90      True
+JavaScript       4.30       4.30      True
+Node.js          3.85       3.85      True
+R                3.70       3.70      True
+C++              3.90       3.90      True
+PHP              2.70       2.70      True
+Java             3.80       3.80      True
+Mejor lenguaje: Python 4.9</code></pre></div>
+
+  <p>El resultado puede volver a guardarse como JSON para otro programa, por ejemplo el servicio de IA o la interfaz:</p>
+  <div class="codigo"><pre><code class="language-python">import json
+
+resumen = {"mejor": calculado.idxmax(), "puntuacion": float(calculado.max())}
+print(json.dumps(resumen, indent=2))          # dumps = diccionario -&gt; texto JSON</code></pre></div>
+  <div class="codigo"><pre><code class="nohighlight">{
+  "mejor": "Python",
+  "puntuacion": 4.9
+}</code></pre></div>
+
+  <h3>6.7 Que mas se puede hacer con lo extraido</h3>
+  <ul>
+    <li><strong>Validar:</strong> comprobar que los totales, los enlaces y las rutas de la pagina son correctos (como se hizo con la matriz).</li>
+    <li><strong>Resumir:</strong> contar secciones, tablas o palabras, o generar un indice automatico a partir de los <code>h2</code>.</li>
+    <li><strong>Comparar:</strong> descargar dos versiones de la pagina y ver que ha cambiado.</li>
+    <li><strong>Reutilizar:</strong> guardar la tabla como CSV (<code>df.to_csv</code>) o como JSON (<code>df.to_json</code>) para graficos o informes.</li>
+    <li><strong>Alimentar la aplicacion:</strong> en Matriculator, el mismo esquema serviria para leer los datos de entrada en JSON y para parsear el HTML de una web externa si hiciera falta.</li>
+  </ul>
+  <div class="caja border-sky-400/50">
+    <p class="mb-0"><strong>Limite importante:</strong> <code>requests</code> y <code>BeautifulSoup</code> leen el HTML tal como lo envia el servidor y <strong>no ejecutan JavaScript</strong>. En esta pagina, los graficos de Google Trends y la tabla del apartado 2.3 se rellenan con <code>script.js</code> en el navegador, asi que en el HTML descargado aparecen vacios. Para esos datos hay que leer directamente los ficheros de la carpeta <code>data/</code>.</p>
+  </div>
+
+  <h3>6.8 Material adicional</h3>
   <p>Demostracion en Python (HTML, CSV y JSON) y tabla de librerias equivalentes en R:
     <a href="demo_lenguajes.ipynb">demo_lenguajes.ipynb</a>.
   </p>
+  <p>Anexo: como se parsea un JSON paso a paso, con un ejemplo interactivo:
+    <a href="json.html">ver pagina de parseo de JSON</a>.
+  </p>
+</section>
+
+<!-- ============ REFLEXION ============ -->
+<section id="reflexion">
+  <h2>7. Tipo de IA y modelo</h2>
+
+  <h3>7.1 ¿La solucion es IA debil o se aproxima a IA fuerte?</h3>
+  <div class="caja">
+    <p><strong>Es un claro ejemplo de IA debil (o estrecha).</strong> El sistema esta disenado y entrenado exclusivamente para una tarea muy especifica: detectar y reconocer caracteres de matriculas en imagenes.</p>
+    <p class="mb-0">No posee conciencia, razonamiento general ni capacidad de adaptacion fuera de ese ambito de vision artificial.</p>
+  </div>
+
+  <h3>7.2 ¿Usarias un modelo preentrenado o entrenarias desde cero?</h3>
+  <div class="caja">
+    <p><strong>Se utilizaria un modelo preentrenado,</strong> combinando una red de deteccion de objetos como YOLO para localizar la placa y un motor OCR como Tesseract o EasyOCR.</p>
+    <p class="mb-0">Entrenar un modelo de vision artificial desde cero requiere un coste computacional altisimo y miles de imagenes etiquetadas manualmente. Los modelos preentrenados ofrecen una precision muy elevada de base y solo requieren ajustes menores o integracion directa.</p>
+  </div>
 </section>
 
 </main>
@@ -364,6 +528,8 @@ flowchart LR
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs";
   mermaid.initialize({ startOnLoad: true, theme: "dark" });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 <script src="script.js"></script>
 </body>
 </html>
