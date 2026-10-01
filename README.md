@@ -1,7 +1,6 @@
-# Trabajo-IA-matriculator
 # Trabajo Grupal RA1: Matriculator
 
-## 1. Organización del Grupo y Temporalización
+## Organización del Grupo y Temporalización
 * **Integrantes del grupo:** 3 personas.
 * **Reparto de tareas:**
   * **Byron:** Definición del caso de uso (Paso 1) y diseño del flujo y pseudocódigo (Paso 3).
@@ -256,14 +255,6 @@ Creamos un archivo JSON con datos inventados que podrían llegar a Matriculator,
 
 ---
 
-#. Enlaces de Interés
-
-**URL de Netlify (Web estática):** FALTA PUBLICAR
-
-**Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator)
-
----
-
 # 5. Preguntas Adicionales
 
 ## ¿La solución es IA débil o se aproxima a IA fuerte?
@@ -286,6 +277,10 @@ Google Trends (Datos de interés global de lenguajes de programación).
 
 ---
 
-# 8.
+# 8. Enlaces de Interés
 
-**Pendiente de completar.**
+**URL de Netlify (Web estática):** FALTA PUBLICAR
+
+**Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator)
+
+---
