@@ -311,7 +311,7 @@ Algunas preguntas fueron: “¿Cómo funcionaría una aplicación que detecta ma
 Algunas respuestas tenían demasiados detalles, por lo que pedimos explicaciones más sencillas y eso lo adaptamos a nuestra aplicación.
 También decidimos trabajar con imágenes de prueba y no con datos personales reales.
 
-## 8.22. Comparación de lenguajes
+## 8.2. Comparación de lenguajes
 
 ### Preguntas y prompts utilizados:
 
