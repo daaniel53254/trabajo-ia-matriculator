@@ -90,5 +90,5 @@ function activarIndice() {
 }
 
 dibujar("data/trendsbusquedaweb.csv", "grafico-web", "estado-web").then(rellenarUltimo);
-dibujar("data/trends_youtube.csv", "grafico-youtube", "estado-youtube");
+dibujar("data/trendsyoutube.csv", "grafico-youtube", "estado-youtube");
 activarIndice();
