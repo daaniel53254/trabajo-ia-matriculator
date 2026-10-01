@@ -275,11 +275,18 @@ Apuntes de la unidad de Programación de Inteligencia Artificial (Cebanc).
 
 Google Trends (Datos de interés global de lenguajes de programación).
 
+- Documentacion oficial de Python. The Python Software Foundation. https://docs.python.org/3/ (consultado el 01/10/2026).
+- Documentacion oficial de Ultralytics YOLO. Ultralytics. https://docs.ultralytics.com/ (consultado el 01/10/2026).
+- Repositorio oficial de Tesseract OCR. Google / tesseract-ocr. https://github.com/tesseract-ocr/tesseract (consultado el 01/10/2026).
+- Google Trends. Google. https://trends.google.com/trends/ (consultado el 01/10/2026).
+- MDN Web Docs, referencia de JavaScript. Mozilla. https://developer.mozilla.org/es/docs/Web/JavaScript (consultado el 01/10/2026).
+- Apuntes de la unidad de Programacion de Inteligencia Artificial. CEBANC (material de clase, sin URL publica).
+
 ---
 
 # 7. Enlaces de Interés
 
-**URL de Netlify (Web estática):** FALTA PUBLICAR
+**URL de vercel (Web estática):** [https://trabajo-ia-matriculator.vercel.app/](url)
 
 **Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator)
 
