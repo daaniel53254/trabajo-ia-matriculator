@@ -363,6 +363,7 @@ La IA nos ayudó mucho a entender conceptos que al principio eran complicados, c
 
 Nos ayudó a detectar errores o confusiones, pero no utilizamos todas sus respuestas directamente. Cuando una respuesta no encajaba con el proyecto, la cambiábamos o la descartábamos.
 Una decisión importante tomada por el grupo fue utilizar **Python** para la Inteligencia Artificial y **JavaScript** para la aplicación, después de comparar las diferentes opciones.
+
 La IA ayudó durante el trabajo, pero la elección de Matriculator, los lenguajes, la tabla de decisión y las decisiones finales fueron realizadas por el grupo.
 
 
