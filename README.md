@@ -286,9 +286,9 @@ Google Trends (Datos de interés global de lenguajes de programación).
 
 # 7. Enlaces de Interés
 
-**URL de vercel (Web estática):** [https://trabajo-ia-matriculator.vercel.app/](url)
+**URL de vercel (Web estática):** [https://trabajo-ia-matriculator.vercel.app/](https://trabajo-ia-matriculator.vercel.app/)
 
-**Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator)
+**Repositorio GitHub:** [GitHub - trabajo-ia-matriculator](https://github.com/igorr17/trabajo-ia-matriculator/blob/main/README.md)
 
 ---
 
