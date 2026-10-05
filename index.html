@@ -266,7 +266,98 @@
 <section id="flujo">
   <h2>5. Estructura del programa</h2>
 
-  <h3>5.1 Flujo general (9 etapas)</h3>
+  <h3>5.1 Vista visual del flujo</h3>
+  <div class="diagrama">
+    <svg viewBox="0 0 760 1140" class="mx-auto w-full max-w-xl h-auto" role="img" aria-labelledby="flujo-visual-titulo flujo-visual-desc" font-family="ui-sans-serif, system-ui, sans-serif">
+      <title id="flujo-visual-titulo">Flujo de reconocimiento de matriculas</title>
+      <desc id="flujo-visual-desc">El coche llega, la camara hace una foto, se revisa su calidad (si es mala se repite), la IA lee la matricula y calcula su confianza. Con confianza alta se abre la barrera; con confianza baja una persona revisa. En ambos casos se guarda el registro.</desc>
+      <defs>
+        <marker id="fv-flecha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#dbeafe"/></marker>
+        <marker id="fv-flecha-am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fcd34d"/></marker>
+        <marker id="fv-flecha-na" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fdba74"/></marker>
+        <marker id="fv-flecha-vd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#34d399"/></marker>
+      </defs>
+      <g fill="none" stroke-width="2.5" stroke-linecap="round">
+        <!-- flechas principales -->
+        <path d="M380 118 V148" stroke="#dbeafe" marker-end="url(#fv-flecha)"/>
+        <path d="M380 248 V278" stroke="#dbeafe" marker-end="url(#fv-flecha)"/>
+        <path d="M380 378 V408" stroke="#34d399" marker-end="url(#fv-flecha-vd)"/>
+        <path d="M380 513 V543" stroke="#dbeafe" marker-end="url(#fv-flecha)"/>
+        <!-- repetir foto -->
+        <path d="M338 312 C215 312 215 182 336 182" stroke="#fcd34d" marker-end="url(#fv-flecha-am)"/>
+        <!-- confianza baja / alta -->
+        <path d="M342 598 C250 598 190 598 190 668" stroke="#fdba74" marker-end="url(#fv-flecha-na)"/>
+        <path d="M418 598 C510 598 570 598 570 668" stroke="#34d399" marker-end="url(#fv-flecha-vd)"/>
+        <!-- hacia el registro -->
+        <path d="M190 990 C190 1045 250 1055 336 1055" stroke="#dbeafe" marker-end="url(#fv-flecha)"/>
+        <path d="M570 815 C570 1000 500 1055 424 1055" stroke="#dbeafe" marker-end="url(#fv-flecha)"/>
+        <path d="M190 812 V838" stroke="#dbeafe" marker-end="url(#fv-flecha)"/>
+      </g>
+
+      <!-- 1 coche -->
+      <g stroke="#2563c9" stroke-width="2" fill="#1b4b98">
+        <rect x="355" y="28" width="50" height="18" rx="6"/>
+        <rect x="335" y="42" width="90" height="28" rx="9"/>
+        <circle cx="357" cy="72" r="7" fill="#081f4a" stroke="#bfdbfe"/>
+        <circle cx="403" cy="72" r="7" fill="#081f4a" stroke="#bfdbfe"/>
+      </g>
+      <!-- 2 camara -->
+      <g stroke="#2563c9" stroke-width="2" fill="#1b4b98">
+        <rect x="363" y="152" width="34" height="12" rx="3"/>
+        <rect x="343" y="160" width="74" height="46" rx="9"/>
+        <circle cx="380" cy="183" r="13" fill="#081f4a" stroke="#bfdbfe"/>
+        <circle cx="380" cy="183" r="5" fill="#38bdf8" stroke="none"/>
+      </g>
+      <!-- 3 revisar calidad -->
+      <rect x="343" y="293" width="62" height="40" rx="5" fill="#123a7a" stroke="#bfdbfe" stroke-width="2"/>
+      <circle cx="402" cy="304" r="15" fill="none" stroke="#fcd34d" stroke-width="4"/>
+      <path d="M413 316 L428 330" stroke="#fcd34d" stroke-width="4" stroke-linecap="round"/>
+      <!-- 4 matricula -->
+      <rect x="340" y="432" width="80" height="5" rx="2" fill="#5eead4"/>
+      <rect x="340" y="442" width="80" height="26" rx="4" fill="#081f4a" stroke="#bfdbfe" stroke-width="2"/>
+      <text x="380" y="460" text-anchor="middle" font-size="12" fill="#bfdbfe">AB 1234 CD</text>
+      <!-- 5 confianza (velocimetro) -->
+      <path d="M344 602 A36 36 0 0 1 416 602" fill="none" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+      <path d="M380 602 L398 576" stroke="#fcd34d" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="380" cy="602" r="6" fill="#fcd34d"/>
+      <!-- 6 aviso -->
+      <path d="M190 692 L228 764 H152 Z" fill="#7c2d12" stroke="#fdba74" stroke-width="2.5" stroke-linejoin="round"/>
+      <text x="190" y="750" text-anchor="middle" font-size="26" font-weight="700" fill="#fdba74">!</text>
+      <!-- 6 barrera -->
+      <rect x="530" y="692" width="80" height="72" rx="10" fill="#065f46" stroke="#34d399" stroke-width="2.5"/>
+      <path d="M548 745 L594 720" stroke="#6ee7b7" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="548" cy="745" r="6" fill="#6ee7b7"/>
+      <!-- 7 persona -->
+      <circle cx="190" cy="868" r="15" fill="#7c2d12" stroke="#fdba74" stroke-width="2"/>
+      <path d="M160 930 A30 30 0 0 1 220 930 Z" fill="#7c2d12" stroke="#fdba74" stroke-width="2"/>
+      <!-- 8 registro -->
+      <rect x="350" y="1015" width="60" height="80" rx="7" fill="#3730a3" stroke="#a5b4fc" stroke-width="2"/>
+      <g stroke="#c7d2fe" stroke-width="2.5" stroke-linecap="round"><path d="M363 1038 H397"/><path d="M363 1053 H397"/><path d="M363 1068 H382"/></g>
+
+      <!-- textos -->
+      <g fill="#e0f2fe" font-size="15" text-anchor="middle">
+        <text x="380" y="100">1. El coche llega</text>
+        <text x="380" y="236">2. Camara capta foto</text>
+        <text x="380" y="366">3. Revisar calidad de la foto</text>
+        <text x="380" y="500">4. La IA localiza y lee la matricula</text>
+        <text x="380" y="636">5. ¿Que tan segura esta la IA?</text>
+        <text x="190" y="800">6. Aviso de revision</text>
+        <text x="570" y="800">6. Barrera se abre</text>
+        <text x="190" y="956">7. Persona revisa</text>
+        <text x="380" y="1126">8. Registro guardado</text>
+      </g>
+      <text x="190" y="976" text-anchor="middle" font-size="12" fill="#93c5fd">y corrige o confirma</text>
+      <g font-size="13" text-anchor="middle">
+        <g fill="#fcd34d"><text x="130" y="236">Mala calidad</text><text x="130" y="254">(sin luz, borrosa):</text><text x="130" y="272">repetir foto</text></g>
+        <text x="470" y="398" fill="#6ee7b7" text-anchor="start">calidad valida</text>
+        <g fill="#fdba74"><text x="95" y="628">Baja, o no</text><text x="95" y="646">encontro matricula</text></g>
+        <text x="612" y="640" fill="#6ee7b7" text-anchor="start">Alta</text>
+      </g>
+    </svg>
+  </div>
+  <p>Resumen visual del mismo flujo: si la foto es mala se repite; si la IA esta segura la barrera se abre sola, y si duda una persona revisa y corrige antes de guardar el registro.</p>
+
+  <h3>5.2 Flujo general (9 etapas)</h3>
   <div class="diagrama">
 <pre class="mermaid">
 flowchart TD
@@ -296,7 +387,7 @@ flowchart TD
     <li>La revision humana comprueba la imagen y confirma o corrige antes de guardar el registro de prueba.</li>
   </ol>
 
-  <h3>5.2 Antes de integrar el modelo</h3>
+  <h3>5.3 Antes de integrar el modelo</h3>
   <div class="diagrama">
 <pre class="mermaid">
 flowchart LR
@@ -310,7 +401,7 @@ flowchart LR
   </div>
   <p>El equipo prepara datos anotados sin personas identificables, elige modelos preentrenados, los evalua y fija el umbral de confianza a partir del cual se pide revision humana.</p>
 
-  <h3>5.3 Despues de integrar el modelo</h3>
+  <h3>5.4 Despues de integrar el modelo</h3>
   <div class="diagrama">
 <pre class="mermaid">
 flowchart LR
@@ -326,7 +417,7 @@ flowchart LR
   </div>
   <p>Con el modelo ya disponible, la aplicacion solo carga el modelo una vez, recibe imagenes, devuelve la matricula con su confianza y deriva a una persona los casos dudosos. Se conserva lo minimo necesario y se borra la imagen tras procesarla.</p>
 
-  <h3>5.4 Pseudocodigo</h3>
+  <h3>5.5 Pseudocodigo</h3>
   <p>Pseudocodigo en Python (entrada, funciones principales, control de errores y salida):
     <a href="pseudocodigo.html">ver pagina de pseudocodigo</a>
     (version original en notebook: <a href="https://github.com/igorr17/trabajo-ia-matriculator/blob/main/Pseudocodigo.ipynb" target="_blank" rel="noopener">Pseudocodigo.ipynb</a>).
